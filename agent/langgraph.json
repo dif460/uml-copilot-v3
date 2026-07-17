@@ -1,0 +1,10 @@
+{
+  "dependencies": [
+    "."
+  ],
+  "graphs": {
+    "uml_copilot_agent": "uml_agent.graph:graph",
+    "odoo_requirement_agent": "odoo_agent.graph:graph"
+  },
+  "env": ".env"
+}
