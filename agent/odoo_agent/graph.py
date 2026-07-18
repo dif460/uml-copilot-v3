@@ -133,18 +133,24 @@ PROTOTYPE_PATCH_TOOL = {
 }
 
 
-def analyze_requirement(state: OdooAgentState) -> dict:
+async def analyze_requirement(state: OdooAgentState) -> dict:
     model = ChatOpenAI(
-        model=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
+        model=os.getenv("OPENAI_MODEL", "qwen2.5-coder-7b-instruct"),
         temperature=0,
-        base_url=os.getenv("OPENAI_API_BASE"),
+        api_key=os.getenv("OPENAI_API_KEY", "lm-studio"),
+        base_url=os.getenv("OPENAI_API_BASE","http://192.168.2.211:1234/v1"),
     )
-    bound = model.bind_tools([PROTOTYPE_PATCH_TOOL], tool_choice="PrototypePatch")
+    force_tool = os.getenv("FORCE_TOOL", "true").lower() in ("true", "1", "yes")
+    tool_choice = (
+        {"type": "function", "function": {"name": "PrototypePatch"}}
+        if force_tool else "auto"
+    )
+    bound = model.bind_tools([PROTOTYPE_PATCH_TOOL], tool_choice=tool_choice)
 
     prototype = state.get("prototype") or default_prototype()
     recent_messages = state.get("messages", [])[-10:]
 
-    response = bound.invoke(
+    response = await bound.ainvoke(
         [
             SystemMessage(content=SYSTEM_PROMPT),
             SystemMessage(

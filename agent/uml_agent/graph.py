@@ -108,27 +108,42 @@ def apply(p, patch_dict):
     return r
 
 def _extract_patch(response) -> dict:
-    """从 LLM 响应中提取 UMLPatch 工具调用参数"""
+    """从 LLM 响应中提取 UMLPatch 工具调用参数，失败时尝试解析文本内容兜底"""
     tool_calls = getattr(response, "tool_calls", None) or []
     for tc in tool_calls:
         if tc.get("name") == "UMLPatch":
             return tc.get("args", {})
+    # 工具调用失败时，尝试从文本中提取 JSON（部分模型不支持 function calling）
+    content = getattr(response, "content", "") or ""
+    try:
+        import re
+        m = re.search(r"\{[\s\S]*\}", content)
+        if m:
+            return json.loads(m.group())
+    except Exception:
+        pass
     return {}
 
-def node(state):
+async def node(state):
     p = state.get("project") or {
         "id": "new", "name": "Untitled UML Project",
         "tables": [], "relations": [], "version": 1, "sourceFiles": [],
     }
 
     model = ChatOpenAI(
-        model=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
+        model=os.getenv("OPENAI_MODEL", "qwen2.5-coder-7b-instruct"),
         temperature=0,
-        base_url=os.getenv("OPENAI_API_BASE"),
+        api_key=os.getenv("OPENAI_API_KEY","lm-studio"),
+        base_url=os.getenv("OPENAI_API_BASE","http://192.168.2.211:1234/v1"),
     )
-    bound = model.bind_tools([UML_PATCH_TOOL], tool_choice="UMLPatch")
+    force_tool = os.getenv("FORCE_TOOL", "true").lower() in ("true", "1", "yes")
+    tool_choice = (
+        {"type": "function", "function": {"name": "UMLPatch"}}
+        if force_tool else "auto"
+    )
+    bound = model.bind_tools([UML_PATCH_TOOL], tool_choice=tool_choice)
 
-    response = bound.invoke([
+    response = await bound.ainvoke([
         SystemMessage(content=PROMPT),
         SystemMessage(content="CURRENT PROJECT:\n" + json.dumps(p)),
         *state.get("messages", [])[-10:],

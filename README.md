@@ -47,25 +47,3 @@ Open http://localhost:3000.
 - Remove legacy_code from Products.
 
 “”“
-已打包好，启动如下：
-```
-## 项目启动步骤
-### 1. 确认 .env 配置
-确保 agent/.env 中包含 DeepSeek API 配置：
-
-### 2. 启动 Parser 服务（端口 8000）
-### 3. 启动 LangGraph 服务（端口 2024）
-打开新终端：
-
-### 4. 启动前端（端口 3000）
-打开新终端：
-
-```
-cd frontend
-node_modules\.bin\next.cmd dev -p 
-3000
-``` 注意 ：不要用 pnpm dev ，沙箱环境下 pnpm 有 SQLite 数据库问题，直接用 next.cmd 。
-### 5. 打开浏览器
-访问 http://localhost:3000
-```
-”“”
