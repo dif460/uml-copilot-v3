@@ -1,6 +1,6 @@
 # UML Copilot v3
 
-This version converts the previous Odoo prototype tool into an Excel-to-UML copilot.biaoji
+This version converts the previous Odoo prototype tool into an Excel-to-UML copilot.biaoji1
 
 ## Capabilities
 
