@@ -3,7 +3,8 @@ from pathlib import Path
 from fastapi import FastAPI,File,UploadFile,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from python_calamine import CalamineWorkbook
-app=FastAPI(title='UML Copilot Parser');app.add_middleware(CORSMiddleware,allow_origins=['http://localhost:3000'],allow_methods=['*'],allow_headers=['*'])
+app=FastAPI(title='UML Copilot Parser');
+app.add_middleware(CORSMiddleware,allow_origins=['http://113.250.180.110:3000'],allow_methods=['*'],allow_headers=['*'])
 def name(v,f):
  s=re.sub(r'[^A-Za-z0-9_]+','_',str(v or '').strip()).strip('_');return s or f
 def typ(vals):
