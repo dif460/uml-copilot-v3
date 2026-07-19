@@ -4,7 +4,7 @@ from fastapi import FastAPI,File,UploadFile,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from python_calamine import CalamineWorkbook
 app=FastAPI(title='UML Copilot Parser');
-app.add_middleware(CORSMiddleware,allow_origins=['http://113.250.180.110:3000'],allow_methods=['*'],allow_headers=['*'])
+app.add_middleware(CORSMiddleware,allow_origins=['http://localhost:3000'],allow_methods=['*'],allow_headers=['*'])
 def name(v,f):
  s=re.sub(r'[^A-Za-z0-9_]+','_',str(v or '').strip()).strip('_');return s or f
 def typ(vals):
@@ -35,6 +35,34 @@ def infer(ts):
     if s['id']!=t['id'] and base in {target,singular}:
      f['foreignKey']=True;out.append({'id':str(uuid.uuid4()),'sourceTableId':s['id'],'sourceFieldId':f['id'],'targetTableId':t['id'],'targetFieldId':p['id'],'type':'many-to-one','label':f"{s['name']}.{f['name']} → {t['name']}.{p['name']}",'inferred':True,'confidence':0.95});break
  return out
+_ODOOTYPE={'string':'char','integer':'integer','decimal':'float','boolean':'boolean','date':'date','datetime':'datetime','text':'text','uuid':'char','unknown':'char'}
+def _to_snake(s):return re.sub(r'[^A-Za-z0-9]+','_',s).strip('_').lower() or s
+def build_roles(ts):
+ """从表列表生成默认角色"""
+ if not ts:return []
+ pn=_to_snake(ts[0].get('name',''))
+ return [{'id':'user','name':'用户','technicalName':f'group_{pn}_user'},
+  {'id':'manager','name':'管理员','technicalName':f'group_{pn}_manager','inherits':['user']}]
+def build_models(ts):
+ """将每张 UML 表映射为 Model 定义"""
+ out=[]
+ for t in ts:
+  tn=t.get('name',''); sid=_to_snake(tn)
+  mfs=[]
+  for f in t.get('fields',[]):
+   fn=f.get('name','unnamed')
+   mfs.append({'id':f.get('id',str(uuid.uuid4())),
+    'name':fn,'technicalName':_to_snake(fn) or 'x_unnamed',
+    'fieldType':_ODOOTYPE.get(f.get('type',''),'char'),
+    'accessByRole':{'user':'editable','manager':'editable'}})
+  pos=t.get('position',{'x':0,'y':0})
+  out.append({'id':sid,'name':tn,'technicalName':f'{sid}.model','module':'base',
+   'position':pos,
+   'accessByRole':{'user':{'read':True,'create':True,'write':True,'unlink':False},
+    'manager':{'read':True,'create':True,'write':True,'unlink':True}},
+   'recordScopeByRole':{'user':'[]','manager':'[(1,"=",1)]'},
+   'fields':mfs})
+ return out
 @app.get('/health')
 def health():return {'status':'ok'}
 @app.post('/api/import/excel')
@@ -46,4 +74,4 @@ async def upload(file:UploadFile=File(...)):
    wb=CalamineWorkbook.from_filelike(io.BytesIO(b));ts=[table(s,wb.get_sheet_by_name(s).to_python()) for s in wb.sheet_names]
  except Exception as e:raise HTTPException(400,f'Parse failed: {e}')
  for i,t in enumerate(ts):t['position']={'x':80+(i%3)*300,'y':80+(i//3)*260}
- return {'id':str(uuid.uuid4()),'name':Path(file.filename or 'model').stem,'description':'Inferred from workbook','tables':ts,'relations':infer(ts),'version':1,'sourceFiles':[file.filename]}
+ return {'id':str(uuid.uuid4()),'name':Path(file.filename or 'model').stem,'description':'Inferred from workbook','tables':ts,'relations':infer(ts),'version':1,'sourceFiles':[file.filename],'roles':build_roles(ts),'models':build_models(ts)}

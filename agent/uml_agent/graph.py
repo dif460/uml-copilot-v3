@@ -25,6 +25,8 @@ def apply(p, patch_dict):
     r = deepcopy(p)
     ts = r.setdefault("tables", [])
     rels = r.setdefault("relations", [])
+    r.setdefault("roles", [])
+    r.setdefault("models", [])
 
     # 删除表
     removed_names = {x.lower() for x in patch_dict.get("tables_to_remove", [])}
@@ -128,6 +130,7 @@ async def node(state):
     p = state.get("project") or {
         "id": "new", "name": "Untitled UML Project",
         "tables": [], "relations": [], "version": 1, "sourceFiles": [],
+        "roles": [], "models": [],
     }
 
     model = ChatOpenAI(

@@ -1,7 +1,7 @@
 "use client";
 import {create} from "zustand";
 import type {UMLField,UMLProject,UMLRelation,UMLTable} from "@/types/uml-schema";
-export const emptyProject:UMLProject={id:"new",name:"Untitled UML Project",tables:[],relations:[],version:1,sourceFiles:[]};
+export const emptyProject:UMLProject={id:"new",name:"Untitled UML Project",tables:[],relations:[],version:1,sourceFiles:[],roles:[],models:[]};
 type S={project:UMLProject;history:UMLProject[];selectedTableId?:string;selectedRelationId?:string;setProject:(p:UMLProject,record?:boolean)=>void;selectTable:(id?:string)=>void;selectRelation:(id?:string)=>void;addTable:()=>void;renameTable:(id:string,name:string)=>void;moveTable:(id:string,x:number,y:number)=>void;deleteTable:(id:string)=>void;addField:(tid:string)=>void;updateField:(tid:string,fid:string,p:Partial<UMLField>)=>void;deleteField:(tid:string,fid:string)=>void;addRelation:(r:Omit<UMLRelation,"id">)=>void;updateRelation:(id:string,patch:Partial<UMLRelation>)=>void;deleteRelation:(id:string)=>void;restore:(i:number)=>void;reset:()=>void};
 const clone=(p:UMLProject)=>JSON.parse(JSON.stringify(p)) as UMLProject;
 export const useUMLStore=create<S>((set)=>({project:emptyProject,history:[emptyProject],

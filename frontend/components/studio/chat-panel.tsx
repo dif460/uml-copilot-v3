@@ -60,17 +60,10 @@ export function ChatPanel() {
     setInput("");
 
     await stream.submit(
-      {
-        messages: [
-          {
-            type: "human",
-            content: text,
-          },
-        ],
-      },
+      { messages: [{ type: "human", content: text }] } as OdooAgentState,
       {
         streamMode: ["messages", "values"],
-        optimisticValues: (current) => ({
+        optimisticValues: (current: OdooAgentState | undefined) => ({
           ...(current ?? { messages: [] }),
           messages: [
             ...((current?.messages ?? []) as AgentMessage[]),
@@ -81,7 +74,7 @@ export function ChatPanel() {
             },
           ],
         }),
-      },
+      } as any,
     );
   }
 
@@ -137,7 +130,7 @@ export function ChatPanel() {
           </div>
         )}
 
-        {stream.error && (
+        {!!stream.error && (
           <div className="flex gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700">
             <CircleAlert size={15} className="shrink-0" />
             <div>
