@@ -3,36 +3,22 @@ node_modules/
 frontend/.next/
 frontend/_tmp_*
 frontend/.env.local
-*.err
 .idea/
+
 # Python
 __pycache__/
-*.py[cod]
-*$py.class
+*.pyc
 *.egg-info/
 .venv/
 venv/
-dist/
-build/
 
 # LangGraph 运行时缓存
 agent/.langgraph_api/
 
-# 环境变量（仅提交 .env.example 模板）
+# 环境变量（真实密钥不要传，只保留.env.example）
 .env
 *.env
 !*.env.example
 
-# 日志
-*.log
-
-# IDE / 编辑器
-.idea/
-.vs/
-*.swp
-*.swo
-*~
-
-# 系统
+# 系统/编辑器
 .DS_Store
-Thumbs.db

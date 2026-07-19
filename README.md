@@ -37,7 +37,9 @@ copy .env.example .env.local
 pnpm dev
 ```
 
-Open http://localhost:3000.
+Open http://localhost.
+
+> **Linux 服务器注意**：80 端口需要 root 权限，请使用 `sudo pnpm dev`。
 
 ## Example prompts
 
