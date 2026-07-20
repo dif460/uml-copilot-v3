@@ -1,6 +1,6 @@
 # UML Copilot v3
 
-This version converts the previous Odoo prototype tool into an Excel-to-UML copilot.biaoji
+This version converts the previous Odoo prototype tool into an Excel-to-UML copilot.
 
 ## Capabilities
 
@@ -16,30 +16,35 @@ This version converts the previous Odoo prototype tool into an Excel-to-UML copi
 ## Start
 
 ### Parser service
-```bash
+`ash
 cd agent
-python -m venv .venv
-.venv\Scripts\activate
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -e .
 uvicorn uml_agent.api:app --reload --port 8000
-```
+`
 
 ### LangGraph
-```bash
+`ash
+pip install langgraph-cli
 langgraph dev
-```
+`
 
 ### Frontend
-```bash
+`ash
 cd frontend
 pnpm install
-copy .env.example .env.local
+cp .env.example .env.local
 pnpm dev
-```
+`
 
 Open http://localhost.
 
-> **Linux 服务器注意**：80 端口需要 root 权限，请使用 `sudo pnpm dev`。
+> **端口注意**：如果使用 80 端口运行 Frontend，需要 root 权限，请使用 sudo pnpm dev。
+>
+> **首次使用提示**：
+> - langgraph dev 需要先安装 LangGraph CLI，已包含在启动命令中。
+> - Python 虚拟环境激活后，请确保在同一个终端会话中继续执行后续命令。
 
 ## Example prompts
 
@@ -47,5 +52,3 @@ Open http://localhost.
 - Add account_status as a non-null string field.
 - Link Orders.customer_id to Accounts.id as many-to-one.
 - Remove legacy_code from Products.
-
-“”“

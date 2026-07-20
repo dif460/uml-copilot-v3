@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Bot, CircleAlert, Loader2, Send, User } from "lucide-react";
 import { useStream } from "@langchain/react";
 import { usePrototypeStore } from "@/stores/prototype-store";
+import { useLocale } from "@/lib/i18n";
 import type { OdooAgentState, AgentMessage } from "@/types/agent-state";
 
 const apiUrl =
@@ -33,6 +34,7 @@ function messageRole(message: AgentMessage): "assistant" | "user" {
 export function ChatPanel() {
   const [input, setInput] = useState("");
   const replaceSchema = usePrototypeStore((state) => state.replaceSchema);
+  const { t } = useLocale();
 
   const stream = useStream<OdooAgentState>({
     apiUrl,
@@ -81,7 +83,7 @@ export function ChatPanel() {
   return (
     <aside className="flex min-h-0 flex-col border-r border-[#dedede] bg-white">
       <div className="border-b px-4 py-3">
-        <div className="text-sm font-semibold">需求分析会话</div>
+        <div className="text-sm font-semibold">{t("chat.odoo.title")}</div>
         <div className="mt-0.5 flex items-center gap-2 text-xs text-neutral-500">
           <span>LangGraph · {assistantId}</span>
           <span
@@ -97,7 +99,7 @@ export function ChatPanel() {
           <div className="flex items-start gap-2.5">
             <Avatar role="assistant" />
             <div className="rounded-xl bg-[#f4f0f3] px-3 py-2 text-xs leading-5">
-              请描述需要新增或修改的 Odoo 页面。我会分析业务规则并同步更新右侧原型。
+              {t("chat.odoo.welcome")}
             </div>
           </div>
         )}
@@ -126,7 +128,7 @@ export function ChatPanel() {
         {stream.isLoading && (
           <div className="flex items-center gap-2 text-xs text-neutral-500">
             <Loader2 className="animate-spin" size={14} />
-            Agent 正在分析需求并生成原型……
+            {t("chat.odoo.loading")}
           </div>
         )}
 
@@ -134,7 +136,7 @@ export function ChatPanel() {
           <div className="flex gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700">
             <CircleAlert size={15} className="shrink-0" />
             <div>
-              无法连接 LangGraph Server。请确认服务已运行于
+              {t("chat.odoo.error")}{" "}
               <code className="mx-1 rounded bg-red-100 px-1">{apiUrl}</code>。
             </div>
           </div>
@@ -152,13 +154,13 @@ export function ChatPanel() {
                 event.currentTarget.form?.requestSubmit();
               }
             }}
-            placeholder="例如：金额超过5万元时增加两级审批……"
+            placeholder={t("chat.odoo.placeholder")}
             rows={3}
             disabled={stream.isLoading}
             className="w-full resize-none border-0 p-1 text-xs outline-none disabled:bg-white"
           />
           <div className="flex items-center justify-between">
-            <span className="text-[10px] text-neutral-400">Enter 发送 · Shift+Enter 换行</span>
+            <span className="text-[10px] text-neutral-400">{t("chat.odoo.hint")}</span>
             <button
               disabled={!input.trim() || stream.isLoading}
               className="grid h-8 w-8 place-items-center rounded-lg bg-[#714B67] text-white disabled:cursor-not-allowed disabled:opacity-40"

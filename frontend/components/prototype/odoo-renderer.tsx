@@ -2,6 +2,7 @@
 
 import { BarChart3, KanbanSquare, List, Monitor, PanelTop, Search } from "lucide-react";
 import { usePrototypeStore } from "@/stores/prototype-store";
+import { useLocale } from "@/lib/i18n";
 import { DashboardView } from "./views/dashboard-view";
 import { FormView } from "./views/form-view";
 import { ListView } from "./views/list-view";
@@ -9,6 +10,7 @@ import { ListView } from "./views/list-view";
 export function OdooRenderer() {
   const schema = usePrototypeStore((state) => state.schema);
   const setViewType = usePrototypeStore((state) => state.setViewType);
+  const { t } = useLocale();
 
   return (
     <section className="min-w-0 overflow-auto bg-[#f6f6f6]">
@@ -35,11 +37,11 @@ export function OdooRenderer() {
         </div>
 
         <div className="flex h-12 items-center gap-3 border-b bg-white px-4">
-          <button className="rounded bg-[#714B67] px-3 py-1.5 text-xs text-white">+ New</button>
+          <button className="rounded bg-[#714B67] px-3 py-1.5 text-xs text-white">{t("odoo.new")}</button>
           <div className="text-xs text-neutral-500">{schema.breadcrumbs.join(" / ")}</div>
           <div className="ml-4 flex h-8 min-w-[280px] items-center rounded border px-2 text-neutral-400">
             <Search size={14} />
-            <span className="ml-2 text-xs">Search...</span>
+            <span className="ml-2 text-xs">{t("odoo.search")}</span>
           </div>
           <div className="ml-auto flex items-center gap-1 rounded border bg-neutral-50 p-1">
             <ToolbarButton active={schema.viewType === "dashboard"} onClick={() => setViewType("dashboard")}>
@@ -65,7 +67,7 @@ export function OdooRenderer() {
         {schema.viewType === "form" && <FormView schema={schema} />}
         {schema.viewType === "kanban" && (
           <div className="rounded-lg border bg-white p-8 text-sm text-neutral-500">
-            Kanban Renderer 可按同一 Schema 机制继续扩展。
+            {t("odoo.kanban.placeholder")}
           </div>
         )}
       </div>

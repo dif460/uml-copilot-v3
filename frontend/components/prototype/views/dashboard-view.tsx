@@ -1,7 +1,9 @@
+import { useLocale } from "@/lib/i18n";
 import type { PrototypeSchema } from "@/types/prototype-schema";
 
 export function DashboardView({ schema }: { schema: PrototypeSchema }) {
   const max = Math.max(...schema.chart.values);
+  const { t } = useLocale();
 
   return (
     <div className="space-y-3">
@@ -37,7 +39,7 @@ export function DashboardView({ schema }: { schema: PrototypeSchema }) {
         </div>
 
         <div className="rounded-lg border bg-white p-4 shadow-sm">
-          <div className="text-xs font-semibold">CRM Pipeline</div>
+          <div className="text-xs font-semibold">{t("dashboard.pipeline")}</div>
           <div className="mt-4 space-y-4">
             {schema.pipeline.map((item) => (
               <div key={item.label}>
@@ -77,7 +79,7 @@ export function DashboardView({ schema }: { schema: PrototypeSchema }) {
         </div>
 
         <div className="rounded-lg border bg-white p-4 shadow-sm">
-          <div className="text-xs font-semibold">Team Activity</div>
+          <div className="text-xs font-semibold">{t("dashboard.teamActivity")}</div>
           <div className="mt-4 space-y-4 text-[10px]">
             {[
               "Sarah Kim closed a deal with Acme Corporation",
@@ -89,7 +91,7 @@ export function DashboardView({ schema }: { schema: PrototypeSchema }) {
                 <div className="h-6 w-6 rounded-full bg-neutral-100" />
                 <div>
                   <div>{activity}</div>
-                  <div className="text-neutral-400">recently</div>
+                  <div className="text-neutral-400">{t("dashboard.recently")}</div>
                 </div>
               </div>
             ))}

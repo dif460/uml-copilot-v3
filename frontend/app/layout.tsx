@@ -1,4 +1,5 @@
 import "./globals.css";
+import { LocaleWrapper } from "@/lib/locale-wrapper";
 
 export const metadata = {
   title: "Odoo AI Studio",
@@ -10,7 +11,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="zh-CN">
-      <body>{children}</body>
+      <body><LocaleWrapper>{children}</LocaleWrapper></body>
     </html>
   );
 }

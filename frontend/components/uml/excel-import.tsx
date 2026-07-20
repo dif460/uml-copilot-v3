@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { FileSpreadsheet, Loader2 } from "lucide-react";
 import { useUMLStore } from "@/stores/uml-store";
+import { useLocale } from "@/lib/i18n";
 import type { UMLProject } from "@/types/uml-schema";
 
 const url = process.env.NEXT_PUBLIC_UML_PARSER_API_URL ?? "http://localhost:8000";
@@ -12,6 +13,7 @@ export function ExcelImport() {
   const setProject = useUMLStore((s) => s.setProject);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+  const { t } = useLocale();
 
   async function load(f: File) {
     setBusy(true);
@@ -31,7 +33,7 @@ export function ExcelImport() {
 
       setProject((await r.json()) as UMLProject);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Import failed");
+      setErr(e instanceof Error ? e.message : t("excel.failed"));
     } finally {
       setBusy(false);
     }
@@ -55,7 +57,7 @@ export function ExcelImport() {
         ) : (
           <FileSpreadsheet size={16} />
         )}
-        Import Excel / CSV
+        {t("excel.import")}
       </button>
       {err && <div className="mt-2 text-[10px] text-red-600">{err}</div>}
     </div>

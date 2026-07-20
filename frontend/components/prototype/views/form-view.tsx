@@ -1,11 +1,14 @@
+import { useLocale } from "@/lib/i18n";
 import type { FormField, PrototypeSchema } from "@/types/prototype-schema";
 
 export function FormView({ schema }: { schema: PrototypeSchema }) {
+  const { t } = useLocale();
+
   return (
     <div className="mx-auto max-w-6xl rounded-lg border bg-white shadow-sm">
       <div className="flex items-center border-b px-5 py-3">
-        <button className="rounded bg-[#714B67] px-3 py-1.5 text-xs text-white">Confirm</button>
-        <button className="ml-2 rounded border px-3 py-1.5 text-xs">Cancel</button>
+        <button className="rounded bg-[#714B67] px-3 py-1.5 text-xs text-white">{t("form.confirm")}</button>
+        <button className="ml-2 rounded border px-3 py-1.5 text-xs">{t("form.cancel")}</button>
         <div className="ml-auto flex items-center">
           {schema.form.status.map((status, index) => (
             <div key={status} className="flex items-center">
@@ -28,7 +31,7 @@ export function FormView({ schema }: { schema: PrototypeSchema }) {
 
       <div className="p-7">
         <div className="text-2xl font-semibold">{schema.form.title}</div>
-        <div className="mt-1 text-xs text-neutral-400">New</div>
+        <div className="mt-1 text-xs text-neutral-400">{t("form.new")}</div>
 
         <div className="mt-8 grid grid-cols-2 gap-x-10 gap-y-5">
           {schema.form.fields.map((field) => (
@@ -38,7 +41,7 @@ export function FormView({ schema }: { schema: PrototypeSchema }) {
 
         {schema.businessRules.length > 0 && (
           <div className="mt-8 rounded-lg border border-amber-200 bg-amber-50 p-4">
-            <div className="text-xs font-semibold text-amber-900">Business Rules</div>
+            <div className="text-xs font-semibold text-amber-900">{t("form.businessRules")}</div>
             <ul className="mt-2 space-y-1 text-[11px] text-amber-900">
               {schema.businessRules.map((rule) => (
                 <li key={rule.id}>• {rule.description}</li>
@@ -48,10 +51,10 @@ export function FormView({ schema }: { schema: PrototypeSchema }) {
         )}
 
         <div className="mt-8 border-t pt-4">
-          <div className="text-xs font-semibold">Order Lines</div>
+          <div className="text-xs font-semibold">{t("form.orderLines")}</div>
           <div className="mt-3 rounded border">
             <div className="grid grid-cols-[1fr_100px_120px_120px] bg-neutral-50 px-3 py-2 text-[10px] text-neutral-500">
-              <span>Product</span><span>Quantity</span><span>Unit Price</span><span>Subtotal</span>
+              <span>{t("form.product")}</span><span>{t("form.quantity")}</span><span>{t("form.unitPrice")}</span><span>{t("form.subtotal")}</span>
             </div>
             <div className="grid grid-cols-[1fr_100px_120px_120px] px-3 py-3 text-[11px]">
               <span>Custom Product</span><span>10</span><span>$1,240</span><span>$12,400</span>
