@@ -6,6 +6,10 @@ export type Locale = "zh" | "en";
 
 const translations: Record<Locale, Record<string, string>> = {
   zh: {
+    // common
+    "lang.switch": "Switch to English",
+    "lang.label": "EN",
+
     // uml-header
     "uml.title": "UML Copilot",
     "uml.subtitle": "Excel-to-UML 数据模型工作区",
@@ -43,8 +47,29 @@ const translations: Record<Locale, Record<string, string>> = {
     "excel.import": "导入 Excel / CSV",
     "excel.failed": "导入失败",
 
+    // workspace
+    "workspace.addTable": "添加表",
+
+    // field types (display labels)
+    "type.string": "字符串",
+    "type.integer": "整数",
+    "type.decimal": "小数",
+    "type.boolean": "布尔",
+    "type.date": "日期",
+    "type.datetime": "日期时间",
+    "type.text": "文本",
+    "type.uuid": "UUID",
+    "type.unknown": "未知",
+
+    // relation types (edge labels)
+    "relation.one-to-one": "一对一",
+    "relation.one-to-many": "一对多",
+    "relation.many-to-one": "多对一",
+    "relation.many-to-many": "多对多",
+
     // version-panel
     "version.history": "历史版本",
+    "version.format": "v{n}",
 
     // relation-editor
     "relation.title": "关系",
@@ -67,6 +92,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "odoo.new": "+ 新建",
     "odoo.search": "搜索...",
     "odoo.kanban.placeholder": "看板渲染器可按同一 Schema 机制继续扩展。",
+    "odoo.user": "管理员",
 
     // form-view
     "form.confirm": "确认",
@@ -78,13 +104,22 @@ const translations: Record<Locale, Record<string, string>> = {
     "form.quantity": "数量",
     "form.unitPrice": "单价",
     "form.subtotal": "小计",
+    "form.empty": "—",
 
     // dashboard-view
     "dashboard.pipeline": "CRM 管线",
     "dashboard.teamActivity": "团队动态",
     "dashboard.recently": "刚刚",
+    "dashboard.months": "1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月",
+    "dashboard.activity1": "Sarah Kim 完成了与 Acme Corporation 的交易",
+    "dashboard.activity2": "James Lee 创建了发票 INV-2048",
+    "dashboard.activity3": "Nora Diaz 向库存中添加了 120 件商品",
+    "dashboard.activity4": "Tom Blake 更新了 Q3 销售预测",
   },
   en: {
+    "lang.switch": "切换到中文",
+    "lang.label": "中",
+
     "uml.title": "UML Copilot",
     "uml.subtitle": "Excel-to-UML Data Model Workspace",
     "uml.tables": "tables",
@@ -117,7 +152,25 @@ const translations: Record<Locale, Record<string, string>> = {
     "excel.import": "Import Excel / CSV",
     "excel.failed": "Import failed",
 
+    "workspace.addTable": "Add table",
+
+    "type.string": "String",
+    "type.integer": "Integer",
+    "type.decimal": "Decimal",
+    "type.boolean": "Boolean",
+    "type.date": "Date",
+    "type.datetime": "DateTime",
+    "type.text": "Text",
+    "type.uuid": "UUID",
+    "type.unknown": "Unknown",
+
+    "relation.one-to-one": "one-to-one",
+    "relation.one-to-many": "one-to-many",
+    "relation.many-to-one": "many-to-one",
+    "relation.many-to-many": "many-to-many",
+
     "version.history": "History",
+    "version.format": "v{n}",
 
     "relation.title": "Relation",
     "relation.type": "Type",
@@ -137,6 +190,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "odoo.new": "+ New",
     "odoo.search": "Search...",
     "odoo.kanban.placeholder": "Kanban Renderer can be extended using the same Schema mechanism.",
+    "odoo.user": "Admin",
 
     "form.confirm": "Confirm",
     "form.cancel": "Cancel",
@@ -147,10 +201,16 @@ const translations: Record<Locale, Record<string, string>> = {
     "form.quantity": "Quantity",
     "form.unitPrice": "Unit Price",
     "form.subtotal": "Subtotal",
+    "form.empty": "—",
 
     "dashboard.pipeline": "CRM Pipeline",
     "dashboard.teamActivity": "Team Activity",
     "dashboard.recently": "recently",
+    "dashboard.months": "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec",
+    "dashboard.activity1": "Sarah Kim closed a deal with Acme Corporation",
+    "dashboard.activity2": "James Lee created invoice INV-2048",
+    "dashboard.activity3": "Nora Diaz added 120 units to inventory",
+    "dashboard.activity4": "Tom Blake updated the Q3 sales forecast",
   },
 };
 

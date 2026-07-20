@@ -12,6 +12,12 @@ const apiUrl =
 const assistantId =
   process.env.NEXT_PUBLIC_LANGGRAPH_ASSISTANT_ID ?? "odoo_requirement_agent";
 
+const uid = () =>
+  "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+
 function messageText(message: AgentMessage): string {
   if (typeof message.content === "string") return message.content;
 
@@ -70,7 +76,7 @@ export function ChatPanel() {
           messages: [
             ...((current?.messages ?? []) as AgentMessage[]),
             {
-              id: crypto.randomUUID(),
+              id: uid(),
               type: "human",
               content: text,
             },
@@ -85,7 +91,7 @@ export function ChatPanel() {
       <div className="border-b px-4 py-3">
         <div className="text-sm font-semibold">{t("chat.odoo.title")}</div>
         <div className="mt-0.5 flex items-center gap-2 text-xs text-neutral-500">
-          <span>LangGraph · {assistantId}</span>
+          <span>{t("chat.odoo.title")} · {assistantId}</span>
           <span
             className={`h-1.5 w-1.5 rounded-full ${
               stream.error ? "bg-red-500" : "bg-emerald-500"

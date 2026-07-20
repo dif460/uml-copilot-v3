@@ -33,7 +33,7 @@ export function OdooRenderer() {
               </button>
             ))}
           </nav>
-          <div className="ml-auto text-xs text-white/90">Mitchell Admin</div>
+          <div className="ml-auto text-xs text-white/90">{t("odoo.user")}</div>
         </div>
 
         <div className="flex h-12 items-center gap-3 border-b bg-white px-4">

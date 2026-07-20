@@ -32,7 +32,7 @@ export function DashboardView({ schema }: { schema: PrototypeSchema }) {
             ))}
           </div>
           <div className="mt-2 grid grid-cols-12 text-center text-[9px] text-neutral-400">
-            {"Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ").map((month) => (
+            {t("dashboard.months").split(" ").map((month) => (
               <span key={month}>{month}</span>
             ))}
           </div>
@@ -81,16 +81,11 @@ export function DashboardView({ schema }: { schema: PrototypeSchema }) {
         <div className="rounded-lg border bg-white p-4 shadow-sm">
           <div className="text-xs font-semibold">{t("dashboard.teamActivity")}</div>
           <div className="mt-4 space-y-4 text-[10px]">
-            {[
-              "Sarah Kim closed a deal with Acme Corporation",
-              "James Lee created invoice INV-2048",
-              "Nora Diaz added 120 units to inventory",
-              "Tom Blake updated the Q3 sales forecast",
-            ].map((activity) => (
-              <div key={activity} className="flex gap-2">
+            {["dashboard.activity1", "dashboard.activity2", "dashboard.activity3", "dashboard.activity4"].map((key) => (
+              <div key={key} className="flex gap-2">
                 <div className="h-6 w-6 rounded-full bg-neutral-100" />
                 <div>
-                  <div>{activity}</div>
+                  <div>{t(key)}</div>
                   <div className="text-neutral-400">{t("dashboard.recently")}</div>
                 </div>
               </div>

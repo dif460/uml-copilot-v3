@@ -67,6 +67,7 @@ export function FormView({ schema }: { schema: PrototypeSchema }) {
 }
 
 function FieldRenderer({ field }: { field: FormField }) {
+  const { t } = useLocale();
   return (
     <label className={field.width === "full" ? "col-span-2" : ""}>
       <div className="mb-1.5 text-[11px] font-medium text-neutral-600">{field.label}</div>
@@ -85,7 +86,7 @@ function FieldRenderer({ field }: { field: FormField }) {
         </div>
       ) : (
         <div className="min-h-9 rounded border bg-white px-3 py-2 text-xs">
-          {field.value || "—"}
+          {field.value || t("form.empty")}
         </div>
       )}
     </label>

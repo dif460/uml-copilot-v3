@@ -20,15 +20,15 @@ export function RelationEditor(){
       </div>
       <label className="block text-[10px] text-[#888]">{t("relation.type")}</label>
       <select value={r.type} onChange={e=>update(r.id,{type:e.target.value as RelationType})} className="w-full rounded border px-2 py-1.5 text-xs">
-        {relationTypes.map(t=><option key={t}>{t}</option>)}
+        {relationTypes.map(rt=><option key={rt} value={rt}>{t(`relation.${rt}`)}</option>)}
       </select>
       <label className="block text-[10px] text-[#888]">{t("relation.sourceField")} ({st?.name})</label>
       <select value={r.sourceFieldId} onChange={e=>update(r.id,{sourceFieldId:e.target.value})} className="w-full rounded border px-2 py-1.5 text-xs">
-        {st?.fields.map(f=><option key={f.id} value={f.id}>{f.name} ({f.type})</option>)}
+        {st?.fields.map(f=><option key={f.id} value={f.id}>{f.name} ({t(`type.${f.type}`)})</option>)}
       </select>
       <label className="block text-[10px] text-[#888]">{t("relation.targetField")} ({tt?.name})</label>
       <select value={r.targetFieldId} onChange={e=>update(r.id,{targetFieldId:e.target.value})} className="w-full rounded border px-2 py-1.5 text-xs">
-        {tt?.fields.map(f=><option key={f.id} value={f.id}>{f.name} ({f.type})</option>)}
+        {tt?.fields.map(f=><option key={f.id} value={f.id}>{f.name} ({t(`type.${f.type}`)})</option>)}
       </select>
       <label className="block text-[10px] text-[#888]">{t("relation.label")}</label>
       <input value={r.label??""} onChange={e=>update(r.id,{label:e.target.value||undefined})} className="w-full rounded border px-2 py-1.5 text-xs"/>

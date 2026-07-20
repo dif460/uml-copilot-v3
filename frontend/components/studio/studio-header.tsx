@@ -39,11 +39,11 @@ export function StudioHeader() {
         </button>
         <button
           onClick={toggleLocale}
-          title={locale === "zh" ? "Switch to English" : "切换到中文"}
+          title={t("lang.switch")}
           className="flex items-center gap-1 rounded-md border px-2 py-1.5 text-xs font-medium"
         >
           <Languages size={14} />
-          <span className="hidden sm:inline">{locale === "zh" ? "EN" : "中"}</span>
+          <span className="hidden sm:inline">{t("lang.label")}</span>
         </button>
       </div>
     </header>
