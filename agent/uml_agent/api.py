@@ -6,7 +6,7 @@ from python_calamine import CalamineWorkbook
 app=FastAPI(title='UML Copilot Parser');
 app.add_middleware(CORSMiddleware,allow_origins=['*'],allow_methods=['*'],allow_headers=['*'])
 def name(v,f):
- s=re.sub(r'[^A-Za-z0-9_]+','_',str(v or '').strip()).strip('_');return s or f
+ s=re.sub(r'[^\w]+','_',str(v or '').strip(),flags=re.UNICODE).strip('_');return s or f
 def typ(vals):
  x=[v for v in vals if v not in (None,'')]
  if not x:return 'unknown'
@@ -36,7 +36,7 @@ def infer(ts):
      f['foreignKey']=True;out.append({'id':str(uuid.uuid4()),'sourceTableId':s['id'],'sourceFieldId':f['id'],'targetTableId':t['id'],'targetFieldId':p['id'],'type':'many-to-one','label':f"{s['name']}.{f['name']} → {t['name']}.{p['name']}",'inferred':True,'confidence':0.95});break
  return out
 _ODOOTYPE={'string':'char','integer':'integer','decimal':'float','boolean':'boolean','date':'date','datetime':'datetime','text':'text','uuid':'char','unknown':'char'}
-def _to_snake(s):return re.sub(r'[^A-Za-z0-9]+','_',s).strip('_').lower() or s
+def _to_snake(s):return re.sub(r'[^\w]+','_',s,flags=re.UNICODE).strip('_').lower() or s
 def build_roles(ts):
  """从表列表生成默认角色"""
  if not ts:return []
