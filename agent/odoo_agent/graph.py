@@ -123,34 +123,20 @@ def merge_patch(prototype: dict, patch: PrototypePatch) -> dict:
     return result
 
 
-PROTOTYPE_PATCH_TOOL = {
-    "type": "function",
-    "function": {
-        "name": "PrototypePatch",
-        "description": "Odoo prototype modification patch. Always call this tool to describe changes.",
-        "parameters": PrototypePatch.model_json_schema(),
-    },
-}
-
-
-async def analyze_requirement(state: OdooAgentState) -> dict:
+def analyze_requirement(state: OdooAgentState) -> dict:
     model = ChatOpenAI(
-        model=os.getenv("OPENAI_MODEL", "qwen2.5-coder-7b-instruct"),
+        os.getenv("OPENAI_MODEL", "qwen2.5-coder-7b-instruct"),
         temperature=0,
         api_key=os.getenv("OPENAI_API_KEY", "lm-studio"),
         base_url=os.getenv("OPENAI_API_BASE","http://192.168.2.211:1234/v1"),
-    )
-    force_tool = os.getenv("FORCE_TOOL", "true").lower() in ("true", "1", "yes")
-    tool_choice = (
-        {"type": "function", "function": {"name": "PrototypePatch"}}
-        if force_tool else "auto"
-    )
-    bound = model.bind_tools([PROTOTYPE_PATCH_TOOL], tool_choice=tool_choice)
+        streaming=False,
+        disable_streaming=True,
+    ).with_structured_output(PrototypePatch)
 
     prototype = state.get("prototype") or default_prototype()
     recent_messages = state.get("messages", [])[-10:]
 
-    response = await bound.ainvoke(
+    patch = model.invoke(
         [
             SystemMessage(content=SYSTEM_PROMPT),
             SystemMessage(
@@ -163,18 +149,6 @@ async def analyze_requirement(state: OdooAgentState) -> dict:
             ),
             *recent_messages,
         ]
-    )
-
-    # 手动解析 tool_calls
-    tool_calls = getattr(response, "tool_calls", None) or []
-    patch_args = {}
-    for tc in tool_calls:
-        if tc.get("name") == "PrototypePatch":
-            patch_args = tc.get("args", {})
-            break
-
-    patch = PrototypePatch(**patch_args) if patch_args else PrototypePatch(
-        summary="No changes needed."
     )
 
     updated_prototype = merge_patch(prototype, patch)
