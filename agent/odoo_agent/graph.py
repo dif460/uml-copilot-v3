@@ -1,4 +1,4 @@
-import os
+import json, os
 from copy import deepcopy
 
 from langchain_core.messages import AIMessage, SystemMessage
@@ -123,32 +123,67 @@ def merge_patch(prototype: dict, patch: PrototypePatch) -> dict:
     return result
 
 
+# 将 PrototypePatch Pydantic schema 转换为 OpenAI 工具定义
+PROTOTYPE_PATCH_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "PrototypePatch",
+        "description": "Odoo prototype modification patch. Always call this tool to describe changes.",
+        "parameters": PrototypePatch.model_json_schema(),
+    },
+}
+
+
+def _extract_prototype_patch(response) -> dict:
+    """从 LLM 响应中提取 PrototypePatch 工具调用参数，失败时尝试解析文本内容兜底"""
+    tool_calls = getattr(response, "tool_calls", None) or []
+    for tc in tool_calls:
+        if tc.get("name") == "PrototypePatch":
+            return tc.get("args", {})
+    # 工具调用失败时，尝试从文本中提取 JSON
+    content = getattr(response, "content", "") or ""
+    try:
+        m = __import__("re").search(r"\{[\s\S]*\}", content)
+        if m:
+            return json.loads(m.group())
+    except Exception:
+        pass
+    return {}
+
+
 def analyze_requirement(state: OdooAgentState) -> dict:
     model = ChatOpenAI(
         os.getenv("OPENAI_MODEL", "qwen2.5-coder-7b-instruct"),
         temperature=0,
         api_key=os.getenv("OPENAI_API_KEY", "lm-studio"),
         base_url=os.getenv("OPENAI_API_BASE","http://192.168.2.211:1234/v1"),
-        streaming=False,
-        disable_streaming=True,
-    ).with_structured_output(PrototypePatch)
+    )
+    force_tool = os.getenv("FORCE_TOOL", "true").lower() in ("true", "1", "yes")
+    tool_choice = (
+        {"type": "function", "function": {"name": "PrototypePatch"}}
+        if force_tool else "auto"
+    )
+    bound = model.bind_tools([PROTOTYPE_PATCH_TOOL], tool_choice=tool_choice)
 
     prototype = state.get("prototype") or default_prototype()
     recent_messages = state.get("messages", [])[-10:]
 
-    patch = model.invoke(
+    response = bound.invoke(
         [
             SystemMessage(content=SYSTEM_PROMPT),
             SystemMessage(
                 content=(
                     "CURRENT_PROTOTYPE_JSON:\n"
-                    + __import__("json").dumps(
-                        prototype, ensure_ascii=False, indent=2
-                    )
+                    + json.dumps(prototype, ensure_ascii=False, indent=2)
                 )
             ),
             *recent_messages,
         ]
+    )
+
+    patch_dict = _extract_prototype_patch(response)
+    patch = PrototypePatch(**patch_dict) if patch_dict else PrototypePatch(
+        summary="No changes needed.", target_view="dashboard"
     )
 
     updated_prototype = merge_patch(prototype, patch)
