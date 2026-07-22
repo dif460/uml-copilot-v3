@@ -6,7 +6,6 @@ import { useUMLStore } from "@/stores/uml-store";
 import { useLocale } from "@/lib/i18n";
 import type { UMLProject } from "@/types/uml-schema";
 
-const url = process.env.NEXT_PUBLIC_UML_PARSER_API_URL ?? "http://localhost:8000";
 
 export function ExcelImport() {
   const ref = useRef<HTMLInputElement>(null);
@@ -22,7 +21,7 @@ export function ExcelImport() {
       const body = new FormData();
       body.append("file", f);
 
-      const r = await fetch(`${url}/api/import/excel`, {
+      const r = await fetch(`/api/import/excel`, {
         method: "POST",
         body,
       });
