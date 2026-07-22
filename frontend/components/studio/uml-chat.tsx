@@ -7,8 +7,8 @@ import { useUMLStore } from "@/stores/uml-store";
 import { useLocale } from "@/lib/i18n";
 import type { AgentMessage, UMLAgentState } from "@/types/agent-state";
 
-const apiUrl = "/api/langgraph";
-const assistantId = "uml_copilot_agent";
+const apiUrl = process.env.NEXT_PUBLIC_LANGGRAPH_API_URL ?? "http://localhost:2024";
+const assistantId = process.env.NEXT_PUBLIC_LANGGRAPH_ASSISTANT_ID ?? "uml_copilot_agent";
 
 function extractText(m: AgentMessage): string {
   if (typeof m.content === "string") return m.content;

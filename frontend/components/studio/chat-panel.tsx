@@ -7,8 +7,10 @@ import { usePrototypeStore } from "@/stores/prototype-store";
 import { useLocale } from "@/lib/i18n";
 import type { OdooAgentState, AgentMessage } from "@/types/agent-state";
 
-const apiUrl = "/api/langgraph";
-const assistantId = "odoo_requirement_agent";
+const apiUrl =
+  process.env.NEXT_PUBLIC_LANGGRAPH_API_URL ?? "http://localhost:2024";
+const assistantId =
+  process.env.NEXT_PUBLIC_LANGGRAPH_ASSISTANT_ID ?? "odoo_requirement_agent";
 
 const uid = () =>
   "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
