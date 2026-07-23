@@ -155,8 +155,8 @@ def analyze_requirement(state: OdooAgentState) -> dict:
     model = ChatOpenAI(
         os.getenv("OPENAI_MODEL", "qwen2.5-coder-7b-instruct"),
         temperature=0,
-        api_key=os.getenv("OPENAI_API_KEY", "lm-studio"),
-        base_url=os.getenv("OPENAI_API_BASE","http://192.168.2.211:1234/v1"),
+        api_key=os.getenv("OPENAI_API_KEY", "sk-local-placeholder"),
+        base_url=os.getenv("OPENAI_API_BASE","https://odoollm.cpolar.top/v1"),
     )
     force_tool = os.getenv("FORCE_TOOL", "true").lower() in ("true", "1", "yes")
     tool_choice = (
